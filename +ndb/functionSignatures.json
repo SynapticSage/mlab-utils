@@ -1,0 +1,11 @@
+{
+    "_schemaVersion": "1.0.0",
+    "ndBranch.load":
+    {
+        "inputs":
+        [
+        {"name":"animal",   "kind":"required", "type":["char", "string", "choices={'RY16','RY9','RY7'}"],                           "purpose":"Name of animal"},
+        {"name":"datatype", "kind":"required", "type":["char", "string", "choices={'task','maze','dio','diotable','eeg','spike'}"], "purpose":"Name of datatype to load"}
+        ]
+    }
+}
