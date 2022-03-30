@@ -86,10 +86,12 @@ else % <<< ONE SEARCH >>>
     % Possible matchStyle names
     % -------------------
     if ~isempty(indexSearch)
-        idxStr = sprintf('%02d-', indexSearch(:));
+        idxStr = sprintf('%02d-', indexSearch(:)); % 1
         if ~isempty(Opt.level) && Opt.level > numel(indexSearch)
-            for i = 1:(Opt.level - numel(indexSearch))-1
-                idxStr = [idxStr repmat('*-', 1, Opt.level-numel(indexSearch))];
+            %for i = 1:(Opt.level - numel(indexSearch))-1 % 2 through N
+            for i = 1:(Opt.level - numel(indexSearch)) % 2 through N
+                %idxStr = [idxStr repmat('*-', 1, Opt.level-numel(indexSearch))];
+                idxStr = [idxStr repmat('*-', 1, 1)];
             end
         end
         idxStr = idxStr(1:end-1);

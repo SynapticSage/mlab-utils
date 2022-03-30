@@ -1,0 +1,65 @@
+function [spikesBeh, spikeTimes] = ...
+        atBehavior_singleCell(spikeTimes, beh, varargin)
+% Handles the single cell shifing procedure.
+
+
+ip = inputParser;
+ip.KeepUnmatched = true;
+ip.addParameter('matchTimeTolerance', 1/20);      % tolerance for a spike time to match a behavior
+ip.addParameter('removeBadIndsFromSpikes', true);
+ip.addParameter('useGPU', false);
+ip.addParameter('shift', 0);
+ip.parse(varargin{:})
+Opt = ip.Results;
+
+spikeTimesExist = ~isempty(spikeTimes);
+multipleShifts  = length(Opt.shift) > 1;
+
+if spikeTimesExist
+
+    % BRING TO GPU
+    if Opt.useGPU
+        spikeTimes = gpuArray(spikeTimes);
+        beh  = util.table.table2GPUtable(beh);
+    end
+
+    inds = interp1(beh.time, 1:numel(beh.time), ...
+       j spikeTimes(:) + Opt.shift(:)', ...
+        'nearest', 'extrap');
+
+    % ONE OR MANNY SHIFTS?
+    if multipleShifts
+        % Cell of tables
+        spikesBeh = arrayfun(...
+            @(col) beh(inds(:, col), :),...
+            1:size(inds, 2),...
+            'UniformOutput', false);
+        behavior_times = beh.time(inds);
+        badinds = abs(behavior_times - (spikeTimes(:)+Opt.shift(:)')) > Opt.matchTimeTolerance; %FIXME spikeTimes transpose?
+        for shift = 1:numel(Opt.shift)
+            spikesBeh{shift} = spikesBeh{shift}(~badinds(:,shift),:);
+        end
+    else
+        spikesBeh = beh(inds,:);
+        badinds = abs(beh.time(inds) - spikeTimes(:)) > Opt.matchTimeTolerance;
+        spikesBeh = spikesBeh(~badinds,:);
+    end
+
+    if Opt.removeBadIndsFromSpikes && ~multipleShifts
+        spikeTimes = spikeTimes(~badinds);
+    end
+
+
+else
+    if multipleShifts
+        spikesBeh = {};
+    else
+        spikesBeh = table();
+    end
+end
+
+if Opt.useGPU
+    spikeTimes = gather(spikeTimes);
+    spikesBeh  = util.table.GPUtable2table(spikesBeh);
+end
+
