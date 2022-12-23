@@ -65,6 +65,7 @@ for iU = unique(iUns)'
         thisCycle = ndBranch.toNd(thisCycle);
     end
 
+    if ~exist(folder,'dir'); mkdir(folder); end
     m = matfile(fullfile(folder, name + ".mat"), 'Writable', true);
     m.(datatype) = thisCycle;
 end
