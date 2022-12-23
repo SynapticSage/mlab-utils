@@ -85,6 +85,8 @@ cell_table = table();
 timesSpiking = {};
 inds_spikes = nd.indicesMatrixForm(spikes);
 indices = intersect(inds_spikes, indices, 'rows'); % intersect task constrained cellinfo indices with actual indices of the spikes structure
+emptyloc = 0; 
+locs=0;
 for ind = progress(indices')
     ind = num2cell(ind);
     [day, epoch, tetrode, neuron] = deal(ind{:});
@@ -101,9 +103,11 @@ for ind = progress(indices')
             && any(ismember(fieldnames(neuronTetEpoch_details), 'area'))...
             && ~isempty(neuronTetEpoch) ...
             && isfield(neuronTetEpoch,'data')...
-            
+
+        locs = locs + 1;
         ind = cat(2,ind{:});
         if any(size(neuronTetEpoch.data)==0)
+            emptyloc = emptyloc + 1;
             warning("Empty location at " + join(string(ind), "-"));
             continue
         end
@@ -136,6 +140,11 @@ assert(num_cells == height(cell_table))
 if num_cells == 0
     error("No cells");
 end
+disp("Num cells")
+disp(num_cells)
+disp("Percent empty locations")
+disp(emptyloc/locs);
+
 %--------------------------------
 % Remove cells lacking activity
 %--------------------------------

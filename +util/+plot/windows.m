@@ -44,6 +44,7 @@ else
     X = repelem(windowList, 1, 2);
     X = X';
     X = X(:);
+    if numel(X) ~= numel(Y); keyboard; end
     vertices = [X, Y]; % list of xy points used to draw windows
 
     % Link vertices into faces (windows)
