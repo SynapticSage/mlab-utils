@@ -70,7 +70,7 @@ B = cell(size(inds,1),1);
 for binds = inds'
     cnt=cnt+1;
     X = nd.get(behavior, binds);
-    rmfields = intersect(["gridTable", "pathX", "pathY", "trialTimes", Opt.dropFields],...
+    rmfields = intersect(["gridTable", "pathX", "pathY", "trialTimes", "description", Opt.dropFields],...
         fieldnames(behavior));
     X = rmfield(X, rmfields);
 
@@ -98,7 +98,7 @@ try
     behavior         = cat(1, B{:});
 catch ME
     warning('Not all columns shared')
-    behavior         = util.cell.icat(B);
+    behavior         = util.cell.icat(B, 'fieldCombine', 'union');
 end
 behavior.time    = behavior.postime;
 behavior.postime = [];
