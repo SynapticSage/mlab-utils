@@ -1,6 +1,10 @@
 function varargout = fetch(x, fields)
 % Like cellfetch, but instead can fetch mulitiple fields and fetches them into
 % shape matched nd arrays
+%
+% input
+% x :: n-dimensional branched cell
+% fields :: char, string, or cell of char
 
 assert(isstring(fields) ||  ischar(fields)  || iscellstr(fields),...
     'Error: fields must be char, strings, or cell of char');

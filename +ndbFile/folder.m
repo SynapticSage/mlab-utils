@@ -5,6 +5,9 @@ function F = folder(animal, datatype, varargin)
 DETERMINE = -1;
 YES = 1;
 NO = 0;
+if nargin < 2
+    datatype="";
+end
 
 ip = inputParser;
 ip.KeepUnmatched = true;

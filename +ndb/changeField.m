@@ -1,4 +1,5 @@
 function X = changeField(X, field, newfield, varargin)
+% Changes the field in a struct ndb to a new field name
 
 ip = inputParser;
 ip.addParameter('indices',[]);

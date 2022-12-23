@@ -1,11 +1,14 @@
 function renameStruct(animal, datatype, to, from, inds)
 % Renames an internal struct in an NDB file
 
-keyboard
+if nargin < 5; inds = []; end
 files = ndbFile.files([string(animal), string(datatype)],...
     inds);
 
 ff=@fullfile;
+
+disp("Changing animal=" + animal + " datatype=" +datatype + " struct from=" + ...
+            from + " to=" +to);
 
 for file = progress(files(:)', 'Title', 'Renaming NDB single stuct items')
     M = matfile(ff(file.folder,file.name),'writable',true);
