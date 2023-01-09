@@ -28,6 +28,7 @@ ip.addParameter('level',[])
 ip.addParameter('sort',false);
 %ip.addParameter('indices',[]);
 ip.addParameter('singleSearchError',false);
+ip.addParameter('typeNotExistHandling','error');
 ip.parse(varargin{:});
 Opt = ip.Results;
 if ~isempty(Opt.level)
@@ -40,7 +41,15 @@ if isstring(animalDatatype) && numel(animalDatatype) == 2
     animal = animalDatatype(1);
     datatype = animalDatatype(2);
     animalDatatype = char(join(animalDatatype, ""));
-    assert(ndbFile.exist(animal, datatype), sprintf('type=%s does not exist',datatype));
+    typeExists = ndbFile.exist(animal, datatype);
+    if ~typeExists
+        if strcmp(Opt.typeNotExistHandling, 'error')
+            error('type=%s does not exist',datatype);
+        else
+            correctMatches = [];
+            return
+        end
+    end
 else
     animal = [];
     datatype = [];

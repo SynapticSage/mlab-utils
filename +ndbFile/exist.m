@@ -13,6 +13,6 @@ folder = ndbFile.folder(animID, datatype);
 if isempty(index)
     E = ~isempty(dir(fullfile(folder, sprintf('%s%s*',animID,datatype))));
 else
-    E = ~isempty(ndbFile.files([string(animID), string(datatype)], index));
+    E = ~isempty(ndbFile.files([string(animID), string(datatype)], index, [], 'typeNotExistHandling', 'empty'));
 end
 
