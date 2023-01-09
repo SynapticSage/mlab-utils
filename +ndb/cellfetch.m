@@ -29,8 +29,10 @@ end
 % Uniform types
 for v = 1:length(varargout)
     V = varargout{v};
-    types = cellfun(@(x) class(x), V, 'UniformOutput', false);
-    [C,IA,IC] = unique(types);
+    inds = ~cellfun(@isempty, V);
+    sensetype = V(inds);
+    types = cellfun(@(x) class(x), sensetype, 'UniformOutput', false);
+    [C,~,IC] = unique(types);
     modeIC = mode(IC);
     C = C(modeIC);
     C = C{1};
