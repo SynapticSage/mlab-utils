@@ -7,7 +7,7 @@ if exist(filename, 'file')
 end
 
 Dimensions = {'sample', height(T), 'column', 1};
-for variable = fields(:)'
+for variable = progress(fields(:)')
     nccreate(filename, variable, ...
         'Dimensions', Dimensions,...
         'Format', 'netcdf4',...
@@ -17,3 +17,4 @@ for variable = fields(:)'
     ncwrite(filename, variable, T.(variable));
 end
 
+clear all % doing this because I'm losing some memory for an unknown reason
