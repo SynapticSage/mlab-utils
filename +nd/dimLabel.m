@@ -1,5 +1,17 @@
 function results = dimLabel(results, dims, dimlabels, dimvalues)
 % function results = dimLabel(results, dims, dimlabels, dimvalues)
+%
+% Add labels to dimensions of a results structure
+%
+% Inputs:
+%   results: a results structure
+%   dims: a vector of dimension numbers to label
+%   dimlabels: a vector of labels for the dimensions
+%   dimvalues: a cell array of values for each dimension, or a cell array
+%       of cell arrays of values for each dimension
+%
+% Outputs:
+%   results: the results structure with the labels added
 
 % Optionally, just give labels, and we will assume dimensions 1..number ofo labels
 if nargin == 2 && ...

@@ -2,6 +2,12 @@ function X = apply(X, varargin)
 % function X = apply(X, varargin)
 % Applies a funciton iteratively over an nd struct type
 %
+% Inputs:
+% X - nd struct
+% lambda - function to apply
+% fieldmethod - how to apply the function to the fields of the struct
+% varargin - optional arguments
+%
 % The function can optionally be put into a recursive mode by "**"
 %
 % In recursive mode, it can optionally also dive into cells looking for elements to
@@ -14,6 +20,8 @@ function X = apply(X, varargin)
 % fieldmethod = set of fields, only apply to those fields
 % fieldmethod = x"-"y , apply to x and title the new result y
 % fieldmethod = x1,x2,x3,...,xn"-"y , apply to set of fields and title the new result y
+%
+% if fieldmethod is empty, then the lambda is applied to the entire struct
 %
 
 ignoreEmpty = true;

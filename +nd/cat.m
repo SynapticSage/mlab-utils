@@ -1,6 +1,21 @@
 function Y = cat(X, innerdims, outerdims, varargin)
 % Merge each matching field along inner dimensions (dimensions of fields in a
 % struct) along the outer dimensions of X
+%
+% Inputs:
+% X: cell array of structs or nd-struct
+% innerdims: dimensions to merge along
+% outerdims: dimensions to merge along
+% varargin: 'removeEmpty', true/false (default false), remove empty structs
+%   after merging
+% Outputs:
+% Y: nd-struct
+%
+% Example:
+%
+% Y = nd.cat(X, innerdims, outerdims)
+% Y = nd.cat(X, innerdims, outerdims, 'removeEmpty', true)
+%
 
 ip = inputParser;
 ip.addParameter('removeEmpty', false);

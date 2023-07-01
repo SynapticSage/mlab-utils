@@ -6,6 +6,10 @@ function out = fieldGet(X, field, varargin)
 % Inputs:
 %  X - nd struct
 %  field - string, name of field to get
+%  varargin - options
+%    shiftdim - if not empty, shiftdim is applied to the field
+% Outputs:
+%  out - nd cell array, with the field in each cell
 
 ip = inputParser;
 ip.addParameter('shiftdim', []);
