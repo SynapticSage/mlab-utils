@@ -1,5 +1,20 @@
 function results = branched(X)
 % Converts an nd struct to a branched nd struct
+%
+% results = branched(X)
+%
+% This function converts an nd struct to a branched nd struct. This is
+% useful for when you want to convert an nd struct to a cell array, but
+% still want to keep the structure of the nd struct.
+%
+% Input variables:
+%
+%   X:      nd struct
+%
+% Output variables:
+%
+%   results:    branched nd struct
+
 
 ndim = ndims(X);
 

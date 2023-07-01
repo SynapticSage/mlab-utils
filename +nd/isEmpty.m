@@ -1,5 +1,9 @@
 function answer = isEmpty(x, deep)
 % Returns whether I consider a struct in the nd struct empty
+%
+%   answer = nd.isEmpty(x)
+%   answer = nd.isEmpty(x, deep)
+%
 
 if nargin == 1
     deep = true;

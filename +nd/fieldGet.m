@@ -1,5 +1,19 @@
 function out = fieldGet(X, field, varargin)
-% Gets a single field from the nd struct, and stores it into a cell in the same nd shape
+% Gets a single field from the nd struct, and stores it into a cell in the same
+% nd shape
+%
+% out = fieldGet(X, field, varargin)
+%
+% Inputs:
+%   X: nd struct
+%   field: field name
+%   varargin: options
+%       squeeze: if true, squeeze the output
+%       cat: if not empty, cat the output along this dimension
+%
+% Output:
+%   out: cell array of the field values
+
 ip = inputParser;
 ip.addParameter('squeeze', false);
 ip.addParameter('cat', []);

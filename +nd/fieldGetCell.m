@@ -1,5 +1,11 @@
 function out = fieldGet(X, field, varargin)
 % Gets a single field from the nd struct, and stores it into a cell in the same nd shape
+%
+% out = fieldGet(X, field, varargin)
+%
+% Inputs:
+%  X - nd struct
+%  field - string, name of field to get
 
 ip = inputParser;
 ip.addParameter('shiftdim', []);

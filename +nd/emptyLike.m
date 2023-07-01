@@ -2,6 +2,9 @@ function empty = emptyLike(X, varargin)
 % Returns a struct with the same size as X, but empty
 %
 % X can be an nd struct or an nd branched cell
+%
+% empty = emptyLike(X)
+% empty = emptyLike(X, 'size', [1,2,3])
 
 if iscell(X)
     indices = ndBranch.indicesMatrixForm(X);

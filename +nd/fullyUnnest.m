@@ -2,6 +2,25 @@ function obj = fullyUnnest(obj, unnestAddressChar)
 % Utilizes unnest() to fully unnest a hierarchiacl structure. This returns a
 % flatted struct in such a way that all fields are numericals/strings etc from
 % the leaves of a struct tree.
+%
+% obj = nd.fullyUnnest(obj, unnestAddressChar)
+%
+% Inputs
+% ------
+% obj : struct
+%   Struct to be unnested
+%
+% unnestAddressChar : char, optional
+%   Character to use to separate field names in unnested struct. Default is
+%   '_'.
+%
+% Outputs
+% -------
+% obj : struct
+%   Unnested struct
+%
+% See also:
+%   nd.unnest
 
 if nargin < 2
     unnestAddressChar = [];

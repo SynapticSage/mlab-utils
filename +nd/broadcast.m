@@ -1,6 +1,21 @@
 function results = broadcast(results, varargin)
 % function results = broadcast(results, varargin)
-%BROADCAST Broadcast each field of the struct to match other fields
+% BROADCAST Broadcast each field of the struct to match other fields
+%
+% Parameters
+% ----------
+% results : struct
+%   Struct of results to broadcast
+% allow1 : bool, optional
+%   Allow broadcasting of 1 dimension arrays. Default: false
+% allowchar : bool, optional
+%   Allow broadcasting of char arrays. Default: false
+%
+% Returns
+% -------
+% results : struct
+
+
 
 ip = inputParser;
 ip.addParameter('allow1', false);

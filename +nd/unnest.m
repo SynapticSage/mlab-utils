@@ -1,5 +1,24 @@
 function [obj, fields] = unnest(obj, nestfield, fields, unnestAddressChar)
 % Unnests all fields in nestfield, or optionally, certain fields
+%
+% obj = unnest(obj, nestfield, fields, unnestAddressChar)
+%
+% Unnests all fields in nestfield, or optionally, certain fields. If
+% fields is specified, then only those fields will be unnested. If
+% unnestAddressChar is specified, then the unnested fields will be
+% addressed by joining the nestfield and field names with the
+% unnestAddressChar. If unnestAddressChar is not specified, then the
+% unnested fields will be addressed by the field name alone.
+%
+% INPUTS
+%   obj                 NdArray or struct
+%   nestfield           string
+%   fields              string or string array
+%   unnestAddressChar   string (optional)
+%
+% OUTPUTS
+%   obj                 NdArray or struct
+%   fields              string array
 
 if nargin < 3
     fields = [];

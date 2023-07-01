@@ -1,6 +1,15 @@
 function X = flexset(X, ind, x)
 % Flexible version of nd.set
 % Solves the issue of struct X and x being dissimilar
+%
+% X = flexset(X, ind, x)
+%
+% X = nd.set(X, ind, x) is equivalent to X(ind{:}) = x
+% except that it will add missing fields to X and x
+% and will not error if X and x have different fields
+%
+% See also:
+% nd.set
 
 if ~iscell(ind)
     ind = num2cell(ind);

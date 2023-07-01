@@ -1,4 +1,17 @@
 function results = binaryOp(op, results1,results2, varargin)
+% binaryOp - apply a binary operation to two sets of results
+%
+% Syntax:
+%   results = binaryOp(op, results1,results2)
+%
+% Inputs:
+%   op - function handle to binary operation
+%   results1 - first set of results
+%   results2 - second set of results
+%
+% Outputs:
+%   results - results of applying op to results1 and results2
+%
 
 ip = inputParser;
 ip.addParameter('omitnan',true);
