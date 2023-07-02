@@ -22,6 +22,15 @@ if iscell(X)
     end
 elseif istable(X)
     X = util.table.castefficient(X, varargin{:});
+elseif isstruct(X) && ~isscalar(X)
+    for i = 1:numel(X)
+        X(i) = util.type.castefficient(X(i), varargin{:});
+    end
+elseif isstruct(X) && isscalar(X)
+    fn = fieldnames(X);
+    for i = 1:numel(fn)
+        X.(fn{i}) = util.type.castefficient(X.(fn{i}), varargin{:});
+    end
 else
     if isnumeric(X)
         if Opt.negativeNan
