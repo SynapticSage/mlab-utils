@@ -31,8 +31,11 @@ function recursiveResave(folder, varargin)
 %       +none
 
 ip = inputParser();
-ip.addRequired('saveFlags', {'-v7.3', '-uncompressed'});
-ip.parse(folder,varargin{:});
+ip.addParameter('saveFlags', {'-v7.3', '-nocompression'});
+ip.addParameter('exclude', {}, @iscellstr);
+ip.addParameter('contain_exclude', {}, ...
+    @(x) iscellstr(x) || ischar(x) || isstring(x));
+ip.parse(varargin{:});
 Opt = ip.Results;
 
 curr_dir = pwd;
@@ -45,27 +48,48 @@ else
     if isempty(folder); folder=pwd; end
 end
 
+regex_mode = any(contains(Opt.exclude, "*"));
+
 try
 
+    % Convert all mat files in current folder
     pushd(folder);
     f = onCleanup(@() popd());
     M = dir(search);
-    for m = 1:numel(M)
+    for m = progress(1:numel(M), 'Title', 'Converting mat files')
         
         filename = M(m).name;
-        fprintf('(%2.2f) Converting %s\n',100*m/numel(M),filename);
+
+        if any(contains(filename,Opt.contain_exclude))
+            continue;
+        end
+        if regex_mode
+            for e = 1:numel(Opt.exclude)
+                if regexp(filename,Opt.exclude{e})
+                    continue;
+                end
+            end
+        elseif any(strcmp(filename,Opt.exclude))
+            continue;
+        end
+
+        fprintf(' Converting %s\n',filename);
         dat = load(filename);
 
         try
-            save(filename, '-struct', 'dat', Opt.saveFlags);
-        catch % if file is too big to be uncompressed, then go ahead and recompress it into v7.3
-            warning('Could not save file %s as uncompressed.  Saving as v7.3 instead.',filename);
+            save(filename, '-struct', 'dat', Opt.saveFlags{:});
+        catch e % if file is too big to be uncompressed, then go ahead and recompress it into v7.3
+            disp("Caught exception while saving file");
+            disp(e.identifier);
+            disp(e.message);
+            warning("Could not save file " + string(filename) + " with flags " + join(Opt.saveFlags, ", ") + ".");
         end
         
         clear dat;
         
     end
 
+    % Recursively crawl through subfolders
     clear d D;
     D = dir();
     for d = 3:numel(D)
