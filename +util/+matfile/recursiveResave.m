@@ -35,6 +35,7 @@ ip.addParameter('saveFlags', {'-v7.3', '-nocompression'});
 ip.addParameter('exclude', {}, @iscellstr);
 ip.addParameter('contain_exclude', {}, ...
     @(x) iscellstr(x) || ischar(x) || isstring(x));
+ip.addParameter('lambda', []); % lambda function
 ip.parse(varargin{:});
 Opt = ip.Results;
 
@@ -75,6 +76,10 @@ try
 
         fprintf(' Converting %s\n',filename);
         dat = load(filename);
+        if ~isempty(Opt.lambda)
+            disp("...running lambda function...");
+            dat = lambda(dat);
+        end
 
         try
             save(filename, '-struct', 'dat', Opt.saveFlags{:});
