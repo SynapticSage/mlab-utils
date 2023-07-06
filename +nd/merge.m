@@ -17,6 +17,7 @@ ip = inputParser();
 ip.addParameter('ignore', {}, @(x) iscellstr(x) || isstring(x));
 ip.addParameter('only', {},   @(x) iscellstr(x) || isstring(x) || ischar(x));
 ip.addParameter('broadcastLike', false, @islogical);
+ip.addParameter('overwrite',     false, @islogical);
 ip.parse(varargin{:});
 Opts = ip.Results;
 
@@ -35,7 +36,7 @@ for index = indices'
         fields = setdiff(fields, Opts.ignore);
     end
     for field = fields
-        if  ~isfield(A(I{:}),field)
+        if  Opts.overwrite || ~isfield(A(I{:}),field)
             A(I{:}).(field) = B(I{:}).(field);
         end
     end

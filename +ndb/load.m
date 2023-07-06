@@ -1,5 +1,23 @@
 function varargout = load(animal, datatype, varargin)
 % General load for all nd branch objs
+%
+% varargout = ndb.load(animal, datatype, varargin)
+%
+% Inputs (required)
+% animal   - animal name
+% datatype - datatype to load
+%
+% Inputs (optional, param/value)
+% asNd         - return as nd object (default false)
+% asTidy       - return as tidy table (default false)
+% get          - return only the data (default false)
+% simplefilter - simple grep filter for files (default '')
+% level        - how leveled should the output be (default 0)
+% indices      - indices to load (default [])
+% ind          - alias for indices
+% inds         - alias for indices
+% matfile      - return a matfile object (default false); if true, all other
+%                options are ignored regarding output format
 
 ip = inputParser;
 ip.KeepUnmatched = true;
@@ -11,6 +29,7 @@ ip.addParameter('level',  []);   % how leveled show the matfile we grab be (0,1,
 ip.addParameter('indices',[]); % used to match indices (day, epoch, tetrode, etc) ... use nan to select all of a level
 ip.addParameter('ind',[]); % alias for indices
 ip.addParameter('inds',[]); % alias for indices
+ip.addParameter('matfile', false); % return a matfile object
 ip.parse(varargin{:});
 Opt = ip.Results;
 Opt.animal = animal;
@@ -20,6 +39,11 @@ if ~isempty(Opt.ind) && isempty(Opt.indices)
 end
 if ~isempty(Opt.inds) && isempty(Opt.indices)
     Opt.indices = Opt.inds;
+end
+if Opt.matfile
+    loadfunc = @matfile;
+else
+    loadfunc = @load;
 end
 
 % Whatever  we do in this function, let's make sure we come home
@@ -53,7 +77,7 @@ else
 
         fCount = fCount + 1;
         if fCount  == 1
-            res = load(string([file.folder filesep file.name]));
+            res = loadfunc(string([file.folder filesep file.name]));
             try
                 res = res.(datatype);
             catch ME
@@ -81,7 +105,13 @@ else
                 res = ndBranch.set(res, index, []);
             end
         else
-            tmp = load(string([file.folder filesep file.name]));
+            if Opt.matfile
+                varargout{1} = ...
+                    matfile(string([file.folder filesep file.name]));
+                return
+            else
+                tmp = load(string([file.folder filesep file.name]));
+            end
             tmp = tmp.(datatype);
             indices = ndBranch.indicesMatrixForm(tmp);
             if ~isempty(Opt.indices)

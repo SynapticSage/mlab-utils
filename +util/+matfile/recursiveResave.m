@@ -1,9 +1,9 @@
 function recursiveResave(folder, varargin)
 % recursiveResave(folder)
 %
-%   Recursively walks through a folder and all subfolders converting all
-%   mat files to the latest version of mat file format.  This can be used
-%   to compress mat files that have been saved in the v7.3 format to the
+%   Recursively walks through a folder and all subfolders reseaving all
+%   mat files in the folder with special flags.  This can be used, for
+%   compressing mat files that have been saved in the v7.3 format to the
 %   uncompressed v7.3 format.  Or can be used to convert mat files from
 %   v6 to v7.3.
 %
@@ -35,7 +35,10 @@ ip.addParameter('saveFlags', {'-v7.3', '-nocompression'});
 ip.addParameter('exclude', {}, @iscellstr);
 ip.addParameter('contain_exclude', {}, ...
     @(x) iscellstr(x) || ischar(x) || isstring(x));
+ip.addParameter('castefficient', true, @islogical); % cast to most efficient type
+ip.addParameter('castefficient_args', {'compressReals',true}); % cast to most efficient type arguments
 ip.addParameter('lambda', []); % lambda function
+ip.addParameter('lambda_args', {}); % lambda function arguments
 ip.parse(varargin{:});
 Opt = ip.Results;
 
@@ -60,32 +63,48 @@ try
     for m = progress(1:numel(M), 'Title', 'Converting mat files')
         
         filename = M(m).name;
+        disp("Checking file " + string(filename));
 
         if any(contains(filename,Opt.contain_exclude))
+            disp("...skipping file...");
             continue;
         end
         if regex_mode
             for e = 1:numel(Opt.exclude)
                 if regexp(filename,Opt.exclude{e})
+                    disp("...skipping file...");
                     continue;
                 end
             end
         elseif any(strcmp(filename,Opt.exclude))
+            disp("...skipping file...");
             continue;
         end
 
-        fprintf(' Converting %s\n',filename);
+        fprintf(' Loading %s\n',filename);
         dat = load(filename);
+
         if ~isempty(Opt.lambda)
             disp("...running lambda function...");
             dat = lambda(dat);
         end
 
+        if Opt.castefficient
+            disp("...casting to most efficient type...");
+            dat = util.type.castefficient(dat, Opt.castefficient_args{:});
+        end
+
         try
-            save(filename, '-struct', 'dat', Opt.saveFlags{:});
+            disp("...saving file...");
+            initialFileSize = dir(filename).bytes;
+            save(filename + "-tmp.mat", '-struct', 'dat', Opt.saveFlags{:});
+            movefile(filename + "-tmp.mat", filename, 'f');
+            finalFileSize = dir(filename).bytes;
+            disp("...previous size was " + string(initialFileSize) + " bytes, new size is " + string(finalFileSize) + " bytes...");
         catch e % if file is too big to be uncompressed, then go ahead and recompress it into v7.3
+            keyboard;
             disp("Caught exception while saving file");
-            disp(e.identifier);
+            dConvertingisp(e.identifier);
             disp(e.message);
             warning("Could not save file " + string(filename) + " with flags " + join(Opt.saveFlags, ", ") + ".");
         end

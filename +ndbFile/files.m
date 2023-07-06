@@ -86,7 +86,8 @@ if iscell(indexSearch) % <<< MULTIPLE SEARCHES >>>
     for i = 1:numel(indexSearch)
         O = Opt;
         O.indices  = indexSearch{i};
-        correctMatches{i} = ndbFile.files(animalDatatype, indexSearch{i}, folder, O);
+        correctMatches{i} = ndbFile.files(animalDatatype, ... 
+            indexSearch{i}, folder, O);
     end
     correctMatches = cat(1, correctMatches{:});
 

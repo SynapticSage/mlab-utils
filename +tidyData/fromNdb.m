@@ -48,6 +48,9 @@ for ind = indices'
         first = 0;
         T = t;
     else
+        % throw out columns with cell arrays
+        T = clean(T);
+        t = clean(t);
         T = outerjoin(T, t, 'mergekeys', true);
     end
 
@@ -55,3 +58,11 @@ for ind = indices'
 end
 
 P.release();
+
+function t = clean(t)
+
+    arr = table2cell(t(1,:));
+    classes = cellfun(@class, arr,'UniformOutput',false);
+    len = cellfun(@length, arr);
+    % throw out classes = cell and len == 0
+    t(:,classes == "cell" | len == 0) = [];

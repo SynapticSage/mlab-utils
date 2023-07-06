@@ -22,7 +22,7 @@ if numel(Tcell)==1
 end
 
 dim = [];
-if ~isempty(varargin) && isnumeric(varargin{1})
+if ~isempty(varargin)  &&isnumeric(varargin{1})
     dim = varargin{1};
     varargin(1) = [];
 end

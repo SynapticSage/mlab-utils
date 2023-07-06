@@ -4,8 +4,8 @@ function X = apply(X, varargin)
 %
 % Inputs:
 % X - nd struct
-% lambda - function to apply
-% fieldmethod - how to apply the function to the fields of the struct
+% lambda - function to apply (if 2 args, this is the second arg; if 2+ args, this is the third arg)
+% fieldmethod - how to apply the function to the fields of the struct (if 2+ args, this is the second arg)
 % varargin - optional arguments
 %
 % The function can optionally be put into a recursive mode by "**"
@@ -29,7 +29,8 @@ fieldmethod = "";
 lambda = [];
 
 V = varargin;
-if numel(varargin) == 1
+varg1_mode = numel(varargin) == 1;
+if varg1_mode
     lambda = varargin{1};
     varargin(1) = [];
 elseif numel(varargin) >= 2
@@ -53,7 +54,7 @@ end
 
 if isstruct(X) || iscell(X)
     inds = nd.indicesMatrixForm(X);
-    for ind = inds'
+    for ind = progress(inds', 'Title', 'apply')
 
         x = nd.get(X, ind);
 

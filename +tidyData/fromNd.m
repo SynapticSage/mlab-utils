@@ -1,5 +1,20 @@
 function T = fromNd(results, varargin)
 % Make a tidy table from nd list of similar struct objects
+%
+% T = tidyData.fromNd(results, varargin)
+%
+% Inputs
+%   results - nd list of struct objects
+%
+% Optional key/value pairs
+%   'addConstArgs' - cell array of key/value pairs to pass to nd.addConst
+%   'dimLabelArgs' - cell array of key/value pairs to pass to nd.dimLabel
+%   'broadcast'    - true/false (default true). If true, then broadcast
+%                    each struct to the same size before converting to table
+%   'ignore'       - cell array of field names to ignore
+%   'ignoreType'   - cell array of field types to ignore
+%   'stringify'    - true/false (default true). If true, then convert all
+%                    fields to strings
 
 ip = inputParser;
 ip.addParameter('addConstArgs', {});

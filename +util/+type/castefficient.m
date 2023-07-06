@@ -12,6 +12,7 @@ ip.addParameter('compressReals', false);
 ip.addParameter('negativeNan',   false);
 ip.addParameter('nancheck',      true);
 ip.addParameter('minmaxOverride', []); 
+ip.addParameter('verbose',       false, @islogical);
 ip.KeepUnmatched = true;
 ip.parse(varargin{:});
 Opt = ip.Results;
@@ -22,14 +23,28 @@ if iscell(X)
     end
 elseif istable(X)
     X = util.table.castefficient(X, varargin{:});
+elseif isa(X, 'matlab.io.MatFile')
+    fields = fieldnames(X);
+    fields = setdiff(fields, {'Properties', 'Writable', 'Filename'});
+    for i = 1:numel(fields)
+        X.(fields{i}) = util.type.castefficient(X.(fields{i}), varargin{:});
+    end
 elseif isstruct(X) && ~isscalar(X)
+    if Opt.verbose; disp("...iterating struct"); end
     for i = 1:numel(X)
         X(i) = util.type.castefficient(X(i), varargin{:});
     end
-elseif isstruct(X) && isscalar(X)
+elseif isstruct(X)  && isscalar(X)
     fn = fieldnames(X);
     for i = 1:numel(fn)
+        if Opt.verbose
+            disp("...iterating struct field " + fn{i})
+            fprintf("... old class: %s -> ", class(X.(fn{i})))
+        end
         X.(fn{i}) = util.type.castefficient(X.(fn{i}), varargin{:});
+        if Opt.verbose
+            fprintf(" new class: %s\n", class(X.(fn{i})))
+        end
     end
 else
     if isnumeric(X)
@@ -69,7 +84,7 @@ else
             elseif all(lower >= intmin('int64') & upper <= intmax('int64'))
                 X = int64(X);
             end
-        elseif ~isInt && Opt.compressReals && isa(X, 'single')
+        elseif ~isInt && Opt.compressReals  && isa(X, 'double')
             X = single(X);
         end
     end
